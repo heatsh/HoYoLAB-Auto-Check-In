@@ -1,21 +1,37 @@
+import { config } from 'dotenv';
+
+/**
+ * Load config
+ */
+config();
+/**
+ * @type {Object.<string,string | undefined>}
+ */
+const envConfig = {
+  ltokenV2: process.env.ltoken_v2,
+  ltuidV2: process.env.ltuid_v2,
+  discordId: process.env.discord_id,
+  discordWebhook: process.env.discord_webhook,
+};
+
+/**
+ * Auto sign-in
+ */
 const profiles = {
-  token: 'ltoken_v2=v2_XXXXX; ltuid_v2=XXXXX;',
+  token: `ltoken_v2=${envConfig.ltokenV2}; ltuid_v2=${envConfig.ltuidV2};`,
   zzz: true,
   genshin: true,
   honkai_star_rail: false,
   honkai_3: false,
   accountName: 'heatsh',
 };
+const messages = await autoSignFunction(profiles);
 
 /** Discord Notification **/
-const discord_notify = false;
-const myDiscordID =
-  'INSERT YOUR DISCORD ID IF YOU WANT TO GET PING, OR YOU CAN LEAVE IT EMPTY';
-const discordWebhook = 'INSERT YOUR WEBHOOK HERE';
+postWebhook(envConfig.discord_webhook, messages);
 
 /** This code is based on canaria3406 and modified by Areha11Fz **/
 /** The following is the script code. Please DO NOT modify. **/
-
 const urlDict = {
   ZZZ: 'https://sg-act-nap-api.hoyolab.com/event/luna/zzz/os/sign?lang=en-us&act_id=e202406031448091',
   Genshin:
@@ -26,24 +42,8 @@ const urlDict = {
     'https://sg-public-api.hoyolab.com/event/mani/sign?lang=en-us&act_id=e202110291205111',
 };
 
-//#region main
-main();
-async function main() {
-  const messages = await autoSignFunction(profiles);
-  console.log(messages);
-
-  if (discord_notify && discordWebhook) {
-    postWebhook(messages);
-  }
-}
-//#endregion m
-
 function discordPing() {
-  if (myDiscordID) {
-    return `<@${myDiscordID}> `;
-  } else {
-    return '';
-  }
+  return envConfig.discord_id ? `<@${envConfig.discord_id}> ` : '';
 }
 
 async function autoSignFunction({
@@ -98,11 +98,18 @@ async function autoSignFunction({
   return response;
 }
 
-function postWebhook(data) {
+/**
+ * @param {string | undefined} discordWebhook
+ * @param {string | undefined} message
+ */
+function postWebhook(discordWebhook, message) {
+  if (!discordWebhook || !message) {
+    return;
+  }
   let payload = JSON.stringify({
     username: 'Auto Check-In Notification',
     avatar_url: 'https://i.imgur.com/ibrSmCn.png',
-    content: data,
+    content: message,
   });
 
   fetch(discordWebhook, {
