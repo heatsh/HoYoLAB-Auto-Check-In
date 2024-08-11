@@ -13,6 +13,17 @@ const envConfig = {
   discordId: process.env.discord_id,
   discordWebhook: process.env.discord_webhook,
 };
+/** This code is based on canaria3406 and modified by Areha11Fz **/
+/** The following is the script code. Please DO NOT modify. **/
+const urlDict = {
+  ZZZ: 'https://sg-act-nap-api.hoyolab.com/event/luna/zzz/os/sign?lang=en-us&act_id=e202406031448091',
+  Genshin:
+    'https://sg-hk4e-api.hoyolab.com/event/sol/sign?lang=en-us&act_id=e202102251931481',
+  Star_Rail:
+    'https://sg-public-api.hoyolab.com/event/luna/os/sign?lang=en-us&act_id=e202303301540311',
+  Honkai_3:
+    'https://sg-public-api.hoyolab.com/event/mani/sign?lang=en-us&act_id=e202110291205111',
+};
 
 /**
  * Auto sign-in
@@ -29,18 +40,6 @@ const messages = await autoSignFunction(profiles);
 
 /** Discord Notification **/
 postWebhook(envConfig.discord_webhook, messages);
-
-/** This code is based on canaria3406 and modified by Areha11Fz **/
-/** The following is the script code. Please DO NOT modify. **/
-const urlDict = {
-  ZZZ: 'https://sg-act-nap-api.hoyolab.com/event/luna/zzz/os/sign?lang=en-us&act_id=e202406031448091',
-  Genshin:
-    'https://sg-hk4e-api.hoyolab.com/event/sol/sign?lang=en-us&act_id=e202102251931481',
-  Star_Rail:
-    'https://sg-public-api.hoyolab.com/event/luna/os/sign?lang=en-us&act_id=e202303301540311',
-  Honkai_3:
-    'https://sg-public-api.hoyolab.com/event/mani/sign?lang=en-us&act_id=e202110291205111',
-};
 
 function discordPing() {
   return envConfig.discord_id ? `<@${envConfig.discord_id}> ` : '';
